@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>头号玩家测试 | SUNRIMOON森瑞梦</title>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #FDF6EE;
+    color: #2D2016;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .page { display: none; width: 100%; }
+  .page.active { display: flex; flex-direction: column; align-items: center; }
+
+  /* ===== 首页 ===== */
+  .start-card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px 28px 32px;
+    width: 100%;
+    box-shadow: 0 4px 24px rgba(180,130,80,0.1);
+    text-align: center;
+  }
+
+  .brand-tag {
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: #C4A882;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .start-icon { font-size: 72px; margin-bottom: 16px; line-height: 1; }
+
+  .start-title { font-size: 32px; font-weight: 900; color: #2D2016; margin-bottom: 4px; }
+  .start-title-accent { color: #FF6B00; }
+
+  .start-subtitle { font-size: 15px; color: #9E8B78; margin-bottom: 32px; line-height: 1.6; }
+  .start-subtitle em { font-style: normal; color: #2D2016; font-weight: 500; }
+
+  .btn-start {
+    width: 100%; max-width: 280px; padding: 16px 0; border: none; border-radius: 60px;
+    font-size: 17px; font-weight: 700; letter-spacing: 2px; cursor: pointer;
+    background: linear-gradient(135deg, #FF8C42, #FF6B00); color: #fff;
+    transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255,107,0,0.4); }
+  .btn-start:active { transform: translateY(0); }
+
+  .start-event { margin-top: 24px; font-size: 12px; color: #C4A882; line-height: 1.8; }
+
+  /* ===== 题目页 ===== */
+  .quiz-card {
+    background: #fff; border-radius: 28px; padding: 32px 24px 28px;
+    width: 100%; box-shadow: 0 4px 24px rgba(180,130,80,0.1);
+  }
+
+  .progress-track { width: 100%; height: 6px; background: #F5EDE3; border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #FF8C42, #FF6B00); transition: width 0.5s ease; width: 0%; }
+
+  .q-number { font-size: 12px; color: #C4A882; letter-spacing: 2px; margin-bottom: 12px; }
+  .q-text { font-size: 20px; font-weight: 700; color: #2D2016; line-height: 1.5; margin-bottom: 28px; }
+  .q-options { display: flex; flex-direction: column; gap: 10px; }
+
+  .q-opt {
+    width: 100%; padding: 16px 20px; border: 2px solid #F5EDE3; border-radius: 16px;
+    background: #FFFCF8; color: #4A3D30; font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: all 0.25s ease; text-align: left; line-height: 1.5;
+  }
+  .q-opt:hover { border-color: #FFB876; background: #FFF7EE; color: #2D2016; }
+  .q-opt:active { transform: scale(0.98); }
+  .q-opt.selected { border-color: #FF6B00; background: #FFF3E8; color: #FF6B00; font-weight: 700; }
+
+  /* ===== 加载页 ===== */
+  .loading-card {
+    background: #fff; border-radius: 28px; padding: 48px 28px;
+    width: 100%; box-shadow: 0 4px 24px rgba(180,130,80,0.1); text-align: center;
+  }
+  .loading-text { font-size: 15px; color: #9E8B78; line-height: 2.2; }
+  .loading-text span { color: #FF6B00; font-weight: 700; }
+  .loading-dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+  .loading-dot { width: 10px; height: 10px; border-radius: 50%; background: #FF8C42; animation: dotPulse 1.2s ease-in-out infinite; }
+  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse { 0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1.3); } }
+
+  /* ===== 结果卡片 ===== */
+  .result-card-wrap { width: 100%; margin-bottom: 20px; }
+
+  .result-card {
+    background: #FFFCF8; border-radius: 24px; padding: 32px 24px 28px;
+    width: 100%; box-shadow: 0 4px 24px rgba(180,130,80,0.1);
+    text-align: center; position: relative; overflow: hidden;
+  }
+
+  .result-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 180px;
+    background: linear-gradient(180deg, #FFF3E8 0%, #FFFCF8 100%); border-radius: 24px 24px 0 0;
+  }
+
+  .rc-brand { position: relative; z-index: 1; font-size: 11px; letter-spacing: 6px; color: #C4A882; text-transform: uppercase; margin-bottom: 20px; }
+
+  .rc-avatar {
+    position: relative; z-index: 1; width: 120px; height: 120px; margin: 0 auto 16px;
+    border-radius: 50%; background: linear-gradient(135deg, #FFE4CC, #FFD1A8);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(255,140,66,0.2);
+  }
+
+  .rc-avatar-img { width: 88px; height: 88px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; }
+  .rc-avatar-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .rc-avatar-emoji { font-size: 56px; line-height: 1; }
+
+  .rc-type { position: relative; z-index: 1; font-size: 28px; font-weight: 900; color: #2D2016; margin-bottom: 4px; }
+  .rc-match { position: relative; z-index: 1; font-size: 13px; color: #C4A882; margin-bottom: 4px; letter-spacing: 1px; }
+  .rc-percent { position: relative; z-index: 1; font-size: 44px; font-weight: 900; color: #FF6B00; line-height: 1; margin-bottom: 16px; }
+
+  .rc-slogan {
+    position: relative; z-index: 1; display: inline-block; background: #FFF0E0;
+    color: #D4780A; font-size: 14px; font-weight: 500; padding: 8px 20px;
+    border-radius: 20px; margin-bottom: 16px; line-height: 1.5;
+  }
+
+  .rc-desc { position: relative; z-index: 1; font-size: 13px; color: #9E8B78; line-height: 1.8; margin-bottom: 12px; max-width: 300px; margin-left: auto; margin-right: auto; }
+  .rc-rarity { position: relative; z-index: 1; font-size: 12px; color: #C4A882; margin-bottom: 20px; }
+  .rc-rarity b { color: #FF6B00; font-weight: 700; }
+
+  .rc-divider { position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; color: #D4C4B0; font-size: 12px; }
+  .rc-divider::before, .rc-divider::after { content: ''; flex: 1; height: 1px; background: #F0E6D8; }
+
+  .rc-alt-item { position: relative; z-index: 1; display: flex; align-items: center; padding: 10px 0; }
+  .rc-alt-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+  .rc-alt-name { font-size: 13px; font-weight: 500; color: #4A3D30; width: 110px; flex-shrink: 0; }
+  .rc-alt-bar { flex: 1; height: 6px; background: #F5EDE3; border-radius: 3px; margin: 0 10px; overflow: hidden; }
+  .rc-alt-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #FFB876, #FF8C42); transition: width 1s ease; width: 0%; }
+  .rc-alt-pct { font-size: 13px; font-weight: 700; color: #C4A882; min-width: 36px; text-align: right; }
+
+  .rc-qr-section {
+    position: relative; z-index: 1; display: flex; align-items: center;
+    justify-content: center; margin-top: 20px; padding-top: 16px; border-top: 1px dashed #F0E6D8;
+  }
+
+  .rc-qr-box {
+    width: 72px; height: 72px; background: #fff; border: 1px dashed #D4C4B0;
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    margin-right: 12px; flex-shrink: 0;
+  }
+
+  .rc-qr-placeholder { font-size: 10px; color: #D4C4B0; text-align: center; line-height: 1.3; }
+  .rc-qr-title { font-size: 14px; font-weight: 700; color: #2D2016; margin-bottom: 2px; }
+  .rc-qr-sub { font-size: 11px; color: #C4A882; }
+
+  .rc-footer { position: relative; z-index: 1; margin-top: 16px; font-size: 11px; color: #D4C4B0; line-height: 1.6; }
+
+  /* ===== 操作按钮 ===== */
+  .action-btns { width: 100%; display: flex; gap: 10px; margin-bottom: 20px; }
+
+  .btn-action {
+    flex: 1; padding: 14px 0; border-radius: 14px; font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: all 0.25s ease;
+  }
+
+  .btn-save { background: linear-gradient(135deg, #FF8C42, #FF6B00); color: #fff; border: none; box-shadow: 0 4px 12px rgba(255,107,0,0.25); }
+  .btn-save:hover { box-shadow: 0 6px 20px rgba(255,107,0,0.35); }
+  .btn-copy { background: #fff; color: #FF6B00; border: 2px solid #FFD1A8; }
+  .btn-copy:hover { border-color: #FF6B00; }
+  .btn-retry { background: #fff; color: #9E8B78; border: 2px solid #F0E6D8; }
+  .btn-retry:hover { border-color: #D4C4B0; color: #4A3D30; }
+
+  /* ===== 动画 ===== */
+  .fade-in { animation: fadeIn 0.5s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .d1 { animation-delay: 0.1s; opacity: 0; }
+  .d2 { animation-delay: 0.2s; opacity: 0; }
+  .d3 { animation-delay: 0.3s; opacity: 0; }
+  .d4 { animation-delay: 0.4s; opacity: 0; }
+  .d5 { animation-delay: 0.5s; opacity: 0; }
+  .d6 { animation-delay: 0.6s; opacity: 0; }
+
+  @keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.08); } 70% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+  .bounce-in { animation: bounceIn 0.6s ease forwards; }
+
+  @keyframes selectPop { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+  .q-opt.selected { animation: selectPop 0.3s ease; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 首页 -->
+  <div id="page-start" class="page active">
+    <div class="start-card">
+      <div class="brand-tag fade-in">SUNRIMOON</div>
+      <div class="start-icon fade-in d1">🚴</div>
+      <div class="start-title fade-in d2">头号<span class="start-title-accent">玩家</span></div>
+      <div class="start-subtitle fade-in d3">骑上公路车<br>你是哪种<em>头号玩家</em>？</div>
+      <button class="btn-start fade-in d4" onclick="startQuiz()">开始测试</button>
+      <div class="start-event fade-in d5">5.05 – 5.08 上海国际自行车展<br>100个不同类型的头号玩家一起玩</div>
+    </div>
+  </div>
+
+  <!-- 问题页 -->
+  <div id="page-question" class="page">
+    <div class="quiz-card">
+      <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+      <div id="q-number" class="q-number"></div>
+      <div id="q-text" class="q-text"></div>
+      <div id="q-options" class="q-options"></div>
+    </div>
+  </div>
+
+  <!-- 加载页 -->
+  <div id="page-loading" class="page">
+    <div class="loading-card">
+      <div id="loading-text" class="loading-text"></div>
+      <div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- 结果页 -->
+  <div id="page-result" class="page">
+    <div class="result-card-wrap">
+      <div id="result-card" class="result-card">
+        <div class="rc-brand">SUNRIMOON</div>
+        <div class="rc-avatar bounce-in" id="rc-avatar">
+          <div class="rc-avatar-img"><img id="rc-avatar-img" src="" alt="" style="display:none;"><span class="rc-avatar-emoji" id="rc-icon"></span></div>
+        </div>
+        <div class="rc-type fade-in d1" id="rc-type"></div>
+        <div class="rc-match fade-in d1">匹配度</div>
+        <div class="rc-percent fade-in d1" id="rc-percent"></div>
+        <div class="rc-slogan fade-in d2" id="rc-slogan"></div>
+        <div class="rc-desc fade-in d2" id="rc-desc"></div>
+        <div class="rc-rarity fade-in d3" id="rc-rarity"></div>
+        <div class="rc-divider fade-in d3">其他可能</div>
+        <div id="rc-alt-list"></div>
+        <div class="rc-qr-section fade-in d5">
+          <div class="rc-qr-box"><div class="rc-qr-placeholder">二维码<br>占位</div></div>
+          <div><div class="rc-qr-title">扫码测试</div><div class="rc-qr-sub">你是哪种头号玩家？</div></div>
+        </div>
+        <div class="rc-footer fade-in d6">#森瑞梦头号创作玩家 @SUNRIMOON森瑞梦</div>
+      </div>
+    </div>
+    <div class="action-btns fade-in d5">
+      <button class="btn-action btn-save" onclick="saveImage()">保存图片</button>
+      <button class="btn-action btn-copy" onclick="copyShare()">复制文案</button>
+      <button class="btn-action btn-retry" onclick="retryQuiz()">再测一次</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const playerTypes = {
+  climber:   { name: '头号爬坡玩家', icon: '⛰️', img: 'climber', rarity: 5.0, slogan: '看到坡就走不动道，越陡越兴奋的陡M', desc: '你是那种看到坡就走不动道的人。别人害怕的爬坡路段，在你的字典里叫"快乐时光"。越陡越兴奋，海拔越高越上头，山顶的风景永远值得那口喘不上来的气。', share: '我是头号爬坡玩家！看到坡就走不动道，越陡越兴奋的陡M ⛰️' },
+  sprinter:  { name: '头号冲刺玩家', icon: '⚡', img: 'sprinter', rarity: 5.0, slogan: '终点前200米才是比赛开始', desc: '你是一个永远留着力度来说最后一击的人。前半程越佛系，最后200米越疯狂。别人在享受风景的时候，你在蓄力，等到终点线前的那个瞬间——全力释放。', share: '我是头号冲刺玩家！终点前200米才是比赛开始 ⚡' },
+  outfit:    { name: '头号穿搭玩家', icon: '👔', img: 'social', rarity: 4.8, slogan: '出发就是骑行路上最靓的崽', desc: '你是一个把骑行当成T台的人。配色协调比功率数字更让你上头，出门前调穿搭的仪式感谁也别想省。骑得快不快不重要，但一定要好看。', share: '我是头号穿搭玩家！出发就是骑行路上最靓的崽 ✨' },
+  lowcarbon: { name: '头号低碳玩家', icon: '🌿', img: 'chill', rarity: 4.5, slogan: '两个轮子能解决的事，何必四个轮子', desc: '你是那个把骑行融入日常的人。通勤买菜约饭，能骑车绝不坐车。不是因为多环保，就是觉得两个轮子的自由，四个轮子永远给不了。', share: '我是头号低碳玩家！两个轮子能解决的事，何必四个轮子 🌿' },
+  mod:       { name: '头号改装玩家', icon: '🔧', img: 'sprinter', rarity: 4.8, slogan: '颜值与功率都是极致', desc: '原厂只是起点，每一颗螺丝都得自己说了算。你享受折腾的过程，从把带到牙盘，每一处改装都是对极致的追求。车不是骑的，是养的。', share: '我是头号改装玩家！颜值与功率都是极致 🔧' },
+  photo:     { name: '头号打卡玩家', icon: '📸', img: 'chill', rarity: 4.8, slogan: '骑到哪拍到哪，出片比出发更重要', desc: '你是一个骑行界的摄影师。骑5分钟可能就要停下来拍10分钟，光线不对不走，角度不好不骑。朋友圈和相册才是你的真实赛道。', share: '我是头号打卡玩家！骑到哪拍到哪，出片比出发更重要 📸' },
+  night:     { name: '头号夜骑玩家', icon: '🌙', img: 'solo', rarity: 3.9, slogan: '路灯尾灯风声，夜晚才是我的主场', desc: '白天太喧嚣，夜晚才是属于你的骑行时刻。路灯、尾灯、风声组成你的BGM，整条路都是你的专场。别人怕黑，你怕天亮。', share: '我是头号夜骑玩家！路灯尾灯风声，夜晚才是我的主场 🌙' },
+  social:    { name: '头号社牛玩家', icon: '🤝', img: 'social', rarity: 4.5, slogan: '团骑不认识也能聊一路', desc: '你是那个到哪都能交到朋友的人。团骑不认识？聊两公里就是兄弟。你的骑行不缺速度和风景，但最不缺的是搭子。', share: '我是头号社牛玩家！团骑不认识也能聊一路 🤝' },
+  solo:      { name: '头号独行玩家', icon: '🎧', img: 'solo', rarity: 4.5, slogan: '耳机一戴，路线自己说了算', desc: '你享受一个人的骑行，耳机一戴，世界就是自己的。不用等谁，不用迁就配速，想快就快，想停就停。自由就是最好的骑行搭子。', share: '我是头号独行玩家！耳机一戴，路线自己说了算 🎧' },
+  grinder:   { name: '头号卷王玩家', icon: '🔥', img: 'sprinter', rarity: 5.7, slogan: '没PB这趟白骑，Strava永远在刷', desc: '你骑车从来不是随便骑骑，数据就是你的多巴胺。刷新纪录的那一刻，比任何风景都让人兴奋。码表上的每个数据都是你的战场。', share: '我是头号卷王玩家！没PB这趟白骑，Strava永远在刷 🔥' },
+  chill:     { name: '头号佛系玩家', icon: '🧘', img: 'chill', rarity: 5.0, slogan: '不卷配速不卷距离，骑到哪算哪', desc: '你骑车的意义就是骑车本身。不看码表，不追配速，骑到哪算哪，路上遇到什么都是惊喜。你深信骑行的终极奥义——开心就好。', share: '我是头号佛系玩家！不卷配速不卷距离，骑到哪算哪 🧘' },
+  windbreak: { name: '头号破风玩家', icon: '💨', img: 'sprinter', rarity: 5.3, slogan: '永远领骑，永远热泪盈眶（被风吹的）', desc: '你是那个永远冲在最前面的人。风你来扛，路你来带，后面的人只管跟。你以为这是责任？不，你就是享受那种被风拍脸的快感。', share: '我是头号破风玩家！永远领骑，永远热泪盈眶（被风吹的）💨' },
+  slacker:   { name: '头号摸鱼玩家', icon: '🐟', img: 'chill', rarity: 4.6, slogan: '团骑摸鱼第一名，拍照也是第一名', desc: '你把团骑当社交局，骑行是顺便的，拍照聊天才是正经事。摸鱼不可耻，快乐永远排在配速前面，你的节奏就是没有节奏。', share: '我是头号摸鱼玩家！团骑摸鱼第一名，拍照也是第一名 🐟' },
+  health:    { name: '头号养生玩家', icon: '🍵', img: 'chill', rarity: 5.2, slogan: '心率不超130，骑完还要泡杯茶', desc: '你是那个把骑行当养生的人。心率稳在二区，踏频优雅不慌，骑完还要拉伸泡茶。别人在卷PB，你在卷谁活得更久骑得更远。', share: '我是头号养生玩家！心率不超130，骑完还要泡杯茶 🍵' },
+  gear:      { name: '头号装备玩家', icon: '⚙️', img: 'sprinter', rarity: 5.0, slogan: '车架比车贵，轮组永远差一对', desc: '你是那个研究器材比骑车更上头的人。车架比衣柜贵，轮组永远差一对，每一次升级都是信仰。别人问你骑了多少公里，你回答的是花了多少钱。', share: '我是头号装备玩家！车架比车贵，轮组永远差一对 ⚙️' },
+  explorer:  { name: '头号探路玩家', icon: '🗺️', img: 'climber', rarity: 4.5, slogan: '没骑过的路就是好路，包括迷路', desc: '你是那个永远在找新路的人。熟悉的路不走，没骑过的路才有意思。迷路不算意外，那是探险的一部分。你的骑行没有终点，只有下一个路口。', share: '我是头号探路玩家！没骑过的路就是好路，包括迷路 🗺️' },
+  refuel:    { name: '头号补给玩家', icon: '☕', img: 'chill', rarity: 4.6, slogan: '骑30公里买那杯咖啡，再骑30公里回家', desc: '你骑车的目的地永远是某家店。骑30公里买杯咖啡，再骑30公里回家。补给不是手段，补给就是目的。你骑的不是路，是美食地图。', share: '我是头号补给玩家！骑30公里买那杯咖啡，再骑30公里回家 ☕' },
+  tan:       { name: '头号美黑玩家', icon: '☀️', img: 'climber', rarity: 4.3, slogan: '你夏天每天都穿长袜不热吗？', desc: '晒痕就是你的勋章，长袜线就是你的战痕。夏天越晒越兴奋，肤色深一度就是段位升一级。别人防晒你晒背，你骑的不是车，是日光浴。', share: '我是头号美黑玩家！你夏天每天都穿长袜不热吗？☀️' },
+  rain:      { name: '头号雨神玩家', icon: '🌧️', img: 'solo', rarity: 4.3, slogan: '一出门就下雨，一回家就天晴', desc: '你有一种独特的体质——出门必下雨，回家必天晴。你已经放弃了看天气预报，因为老天爷的天气预报里没有你的名字。雨衣是你的永久装备。', share: '我是头号雨神玩家！一出门就下雨，一回家就天晴 🌧️' },
+  pace:      { name: '头号配速玩家', icon: '⏱️', img: 'sprinter', rarity: 5.2, slogan: '均速永远只比上次快0.1', desc: '你对0.1有着病态的执着。均速永远要比上次快那么一点点，哪怕只快0.1也是一种胜利。你的码表从不撒谎，但你和自己的较量永远没有尽头。', share: '我是头号配速玩家！均速永远只比上次快0.1 ⏱️' },
+  anchor:    { name: '头号压轴玩家', icon: '🎭', img: 'social', rarity: 4.6, slogan: '团骑永远在最后但从来没掉过队的神秘人', desc: '你是那个团骑永远在最后面的人，但奇怪的是你从来没掉过队。不争不抢不领骑，但永远在。你是团骑的定海神针，最后的风景归你独享。', share: '我是头号压轴玩家！团骑永远在最后但从来没掉过队的神秘人 🎭' }
+};
+
+const questions = [
+  // ===== 纯维度4题：每题4选项各对应1个维度 =====
+  { text: '周末骑车，你最期待什么？', options: [
+    { key: 'A', text: '约一群骑友热闹出发', scores: { social: 2 } },
+    { key: 'B', text: '挑一条有挑战的路线', scores: { extreme: 2 } },
+    { key: 'C', text: '穿上最帅的骑行服出门', scores: { look: 2 } },
+    { key: 'D', text: '一个人安静地骑', scores: { solo: 2 } }
+  ]},
+  { text: '骑行中你最在意什么？', options: [
+    { key: 'A', text: '和别人比谁骑得快', scores: { compete: 2 } },
+    { key: 'B', text: '码表上的数据好不好', scores: { data: 2 } },
+    { key: 'C', text: '享受沿途的风景和心情', scores: { chill: 2 } },
+    { key: 'D', text: '车的状态和性能调到最佳', scores: { perf: 2 } }
+  ]},
+  { text: '你最认同哪种骑行态度？', options: [
+    { key: 'A', text: '速度就是信仰', scores: { compete: 2 } },
+    { key: 'B', text: '好看才是王道', scores: { look: 2 } },
+    { key: 'C', text: '数据不会骗人', scores: { data: 2 } },
+    { key: 'D', text: '开心就好别卷', scores: { chill: 2 } }
+  ]},
+  { text: '骑行的意义是什么？', options: [
+    { key: 'A', text: '认识更多骑友', scores: { social: 2 } },
+    { key: 'B', text: '追求极致的性能体验', scores: { perf: 2 } },
+    { key: 'C', text: '越极端的条件越刺激', scores: { extreme: 2 } },
+    { key: 'D', text: '一个人在路上最自由', scores: { solo: 2 } }
+  ]},
+  // ===== 判别6题：每选项2分，2维组合 =====
+  // 判别1: 区分低碳(chill+solo) vs 独行(solo+extreme)
+  { text: '一个人骑车的时候，你在想什么？', options: [
+    { key: 'A', text: '慢慢骑，沿途风景才是目的', scores: { chill: 1, solo: 1 } },
+    { key: 'B', text: '加速冲，感受速度的快感', scores: { extreme: 1, solo: 1 } },
+    { key: 'C', text: '拍几张好照片记录这趟骑行', scores: { look: 1, social: 1 } },
+    { key: 'D', text: '看码表，今天数据比昨天好', scores: { data: 1, compete: 1 } }
+  ]},
+  // 判别2: 区分爬坡(compete+extreme) vs 冲刺(compete+look)
+  { text: '遇到一个大长坡，你的反应？', options: [
+    { key: 'A', text: '来了！降档站摇必须攻顶', scores: { compete: 1, extreme: 1 } },
+    { key: 'B', text: '最后200米全力冲刺爆发', scores: { compete: 1, look: 1 } },
+    { key: 'C', text: '稳住心率慢慢骑上去就好', scores: { chill: 1, perf: 1 } },
+    { key: 'D', text: '研究坡度和功率怎么分配', scores: { data: 1, solo: 1 } }
+  ]},
+  // 判别3: 区分社牛(social) vs 摸鱼(social+chill+look)
+  { text: '团骑中你最可能做什么？', options: [
+    { key: 'A', text: '带头领骑组织节奏', scores: { social: 1, compete: 1 } },
+    { key: 'B', text: '溜到最后拍照聊天', scores: { social: 1, chill: 1 } },
+    { key: 'C', text: '关注数据看谁在刷PR', scores: { data: 1, solo: 1 } },
+    { key: 'D', text: '享受风吹在脸上的感觉', scores: { extreme: 1, perf: 1 } }
+  ]},
+  // 判别4: 区分探路(solo+extreme) vs 美黑(extreme+look) vs 雨神(solo+extreme)
+  { text: '哪种路线最让你心动？', options: [
+    { key: 'A', text: '没骑过的路，越野越好', scores: { solo: 1, extreme: 1 } },
+    { key: 'B', text: '风景绝美拍照好看的路', scores: { look: 1, extreme: 1 } },
+    { key: 'C', text: '天气越极端反而越兴奋', scores: { extreme: 1, data: 1 } },
+    { key: 'D', text: '有咖啡馆和补给站的路线', scores: { chill: 1, look: 1 } }
+  ]},
+  // 判别5: 区分装备(perf+data) vs 配速(compete+perf+data)
+  { text: '骑完车回家，你第一件事？', options: [
+    { key: 'A', text: '研究下一个要升级的零件', scores: { perf: 1, data: 1 } },
+    { key: 'B', text: '看码表均速又快了0.1', scores: { compete: 1, data: 1 } },
+    { key: 'C', text: '修图发圈记录今天', scores: { look: 1, social: 1 } },
+    { key: 'D', text: '拉伸放松泡杯茶', scores: { chill: 1, solo: 1 } }
+  ]},
+  // 判别6: 区分夜骑(solo+look) vs 美黑(extreme+look) vs 压轴(social+solo+chill)
+  { text: '哪种天气你反而更想骑车？', options: [
+    { key: 'A', text: '晚上骑车，路都是自己的', scores: { solo: 1, look: 1 } },
+    { key: 'B', text: '大晴天，越晒越上头', scores: { extreme: 1, look: 1 } },
+    { key: 'C', text: '下雨天，路上没人更爽', scores: { extreme: 1, solo: 1 } },
+    { key: 'D', text: '什么天气都行骑就完了', scores: { social: 1, perf: 1 } }
+  ]}
+];
+
+// 8个维度
+const dims = ['social', 'solo', 'compete', 'chill', 'look', 'perf', 'extreme', 'data'];
+
+// 每种类型的画像向量（优化版：增强区分度）
+const profiles = {
+  climber:   { social: 0, solo: 2, compete: 4, chill: 0, look: 0, perf: 0, extreme: 4, data: 0 },
+  sprinter:  { social: 0, solo: 0, compete: 4, chill: 0, look: 2, perf: 1, extreme: 3, data: 0 },
+  outfit:    { social: 1, solo: 0, compete: 0, chill: 0, look: 4, perf: 0, extreme: 1, data: 0 },
+  lowcarbon: { social: 0, solo: 3, compete: 0, chill: 3, look: 0, perf: 0, extreme: 1, data: 0 },
+  mod:       { social: 0, solo: 0, compete: 1, chill: 0, look: 2, perf: 3, extreme: 2, data: 1 },
+  photo:     { social: 3, solo: 0, compete: 0, chill: 1, look: 3, perf: 0, extreme: 0, data: 0 },
+  night:     { social: 0, solo: 4, compete: 0, chill: 0, look: 3, perf: 0, extreme: 3, data: 0 },
+  social:    { social: 4, solo: 0, compete: 1, chill: 1, look: 1, perf: 0, extreme: 0, data: 0 },
+  solo:      { social: 0, solo: 4, compete: 0, chill: 1, look: 0, perf: 0, extreme: 2, data: 0 },
+  grinder:   { social: 0, solo: 0, compete: 3, chill: 0, look: 0, perf: 0, extreme: 0, data: 4 },
+  chill:     { social: 1, solo: 0, compete: 0, chill: 4, look: 1, perf: 0, extreme: 0, data: 0 },
+  windbreak: { social: 3, solo: 0, compete: 3, chill: 0, look: 0, perf: 0, extreme: 2, data: 0 },
+  slacker:   { social: 3, solo: 0, compete: 0, chill: 3, look: 2, perf: 0, extreme: 0, data: 0 },
+  health:    { social: 0, solo: 2, compete: 0, chill: 3, look: 0, perf: 2, extreme: 0, data: 0 },
+  gear:      { social: 0, solo: 0, compete: 0, chill: 0, look: 0, perf: 4, extreme: 1, data: 3 },
+  explorer:  { social: 0, solo: 2, compete: 0, chill: 0, look: 1, perf: 0, extreme: 3, data: 3 },
+  refuel:    { social: 1, solo: 0, compete: 0, chill: 3, look: 3, perf: 0, extreme: 0, data: 0 },
+  tan:       { social: 0, solo: 1, compete: 0, chill: 0, look: 2, perf: 0, extreme: 3, data: 2 },
+  rain:      { social: 0, solo: 3, compete: 0, chill: 0, look: 0, perf: 0, extreme: 4, data: 1 },
+  pace:      { social: 0, solo: 0, compete: 2, chill: 0, look: 0, perf: 3, extreme: 1, data: 3 },
+  anchor:    { social: 3, solo: 2, compete: 0, chill: 2, look: 1, perf: 0, extreme: 0, data: 0 }
+};
+
+// 概率均衡偏置（判别题设计后微调）
+const bias = {
+  climber: -0.01, sprinter: 0.00, outfit: -0.02, lowcarbon: 0.01, mod: 0.01,
+  photo: 0.01, night: 0.02, social: -0.01, solo: 0.01, grinder: -0.05,
+  chill: -0.01, windbreak: -0.02, slacker: 0.03, health: -0.02, gear: -0.04,
+  explorer: 0.02, refuel: 0.01, tan: 0.03, rain: 0.02, pace: 0.02, anchor: 0.03
+};
+
+// 预计算的维度统计常量（基于4^10全组合，判别题版本）
+const means = { social: 2.250000, solo: 3.000000, compete: 2.250000, chill: 2.250000, look: 2.750000, perf: 2.000000, extreme: 3.000000, data: 2.500000 };
+const stds = { social: 1.520691, solo: 1.658312, compete: 1.520691, chill: 1.561249, look: 1.600781, perf: 1.500000, extreme: 1.581139, data: 1.581139 };
+
+let currentQ = 0;
+let scores = {};
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+  currentQ = 0;
+  scores = {};
+  for (const d of dims) scores[d] = 0;
+  showPage('page-question');
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = questions[idx];
+  document.getElementById('progress-fill').style.width = ((idx + 1) / questions.length * 100) + '%';
+  document.getElementById('q-number').textContent = 'Q' + (idx + 1) + ' / ' + questions.length;
+  const textEl = document.getElementById('q-text');
+  textEl.style.opacity = 0;
+  setTimeout(() => { textEl.textContent = q.text; textEl.style.transition = 'opacity 0.3s'; textEl.style.opacity = 1; }, 80);
+  const optsEl = document.getElementById('q-options');
+  optsEl.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.style.opacity = 0;
+    btn.textContent = opt.text;
+    btn.onclick = () => selectOption(opt, btn);
+    optsEl.appendChild(btn);
+    setTimeout(() => { btn.style.transition = 'opacity 0.3s'; btn.style.opacity = 1; }, 150 + i * 60);
+  });
+}
+
+function selectOption(opt, btn) {
+  btn.classList.add('selected');
+  document.querySelectorAll('.q-opt').forEach(b => b.style.pointerEvents = 'none');
+  for (const [dim, val] of Object.entries(opt.scores)) scores[dim] = (scores[dim] || 0) + val;
+  setTimeout(() => {
+    if (currentQ < questions.length - 1) showQuestion(currentQ + 1);
+    else showLoading();
+  }, 350);
+}
+
+function showLoading() {
+  showPage('page-loading');
+  const el = document.getElementById('loading-text');
+  const lines = [
+    '正在分析你的骑行人格...',
+    '你的社交指数：<span>' + (scores.social > scores.solo ? '团骑型' : '独行型') + '</span>',
+    '你的竞技指数：<span>' + (scores.compete > scores.chill ? '卷王型' : '佛系型') + '</span>',
+    '你的审美指数：<span>' + (scores.look > scores.perf ? '颜值型' : '性能型') + '</span>',
+    '你的风格指数：<span>' + (scores.extreme > scores.data ? '冒险型' : '数据型') + '</span>',
+    '结果生成中...'
+  ];
+  let i = 0; el.innerHTML = '';
+  function next() {
+    if (i < lines.length) { el.innerHTML += lines[i++] + '<br>'; setTimeout(next, 500); }
+    else setTimeout(() => { const sorted = calculateResults(scores); showResult(sorted); }, 400);
+  }
+  next();
+}
+
+function calculateResults(scores) {
+  // z-score归一化
+  const zScores = {};
+  for (const d of dims) {
+    zScores[d] = stds[d] > 0 ? ((scores[d] || 0) - means[d]) / stds[d] : 0;
+  }
+  // 余弦相似度 + bias
+  const sims = {};
+  for (const [type, profile] of Object.entries(profiles)) {
+    let dot = 0, magA = 0, magB = 0;
+    for (const d of dims) {
+      const av = zScores[d], bv = profile[d] || 0;
+      dot += av * bv;
+      magA += av * av;
+      magB += bv * bv;
+    }
+    const sim = (magA === 0 || magB === 0) ? 0 : dot / (Math.sqrt(magA) * Math.sqrt(magB));
+    sims[type] = sim + (bias[type] || 0);
+  }
+  // 转换为百分比
+  const maxSim = Math.max(...Object.values(sims));
+  const minSim = Math.min(...Object.values(sims));
+  const range = maxSim - minSim || 1;
+  const results = {};
+  for (const [type, sim] of Object.entries(sims)) {
+    results[type] = Math.max(20, Math.round(((sim - minSim) / range) * 78 + 20));
+  }
+  const sorted = Object.entries(results).sort((a, b) => b[1] - a[1]);
+  if (sorted[0][1] < 75) sorted[0][1] = 75 + Math.floor(Math.random() * 16);
+  if (sorted.length >= 2 && sorted[0][1] - sorted[1][1] < 5) sorted[0][1] = Math.min(99, sorted[1][1] + 5);
+  return sorted;
+}
+
+function showResult(sorted) {
+  const mainType = sorted[0][0], mainPercent = sorted[0][1], type = playerTypes[mainType];
+  showPage('page-result');
+  // 角色图：优先加载图片，失败则用emoji
+  const imgEl = document.getElementById('rc-avatar-img');
+  const emojiEl = document.getElementById('rc-icon');
+  const imgUrl = type.img + '.png';
+  imgEl.src = imgUrl;
+  imgEl.style.display = 'none';
+  emojiEl.style.display = 'none';
+  imgEl.onload = function() { imgEl.style.display = 'block'; };
+  imgEl.onerror = function() { emojiEl.textContent = type.icon; emojiEl.style.display = 'block'; };
+  // 如果图片已缓存则直接显示
+  if (imgEl.complete && imgEl.naturalWidth > 0) { imgEl.style.display = 'block'; }
+  else { emojiEl.textContent = type.icon; emojiEl.style.display = 'block'; }
+  document.getElementById('rc-type').textContent = type.name;
+  const pctEl = document.getElementById('rc-percent');
+  pctEl.textContent = '0%'; let cv = 0;
+  const ci = setInterval(() => { cv += 2; if (cv >= mainPercent) { cv = mainPercent; clearInterval(ci); } pctEl.textContent = cv + '%'; }, 20);
+  document.getElementById('rc-slogan').textContent = type.slogan;
+  document.getElementById('rc-desc').textContent = type.desc;
+  document.getElementById('rc-rarity').innerHTML = '此类型占骑行人群的 <b>' + type.rarity.toFixed(1) + '%</b>';
+  const altEl = document.getElementById('rc-alt-list'); altEl.innerHTML = '';
+  sorted.slice(1, 4).forEach((item, i) => {
+    const [tk, pct] = item, at = playerTypes[tk];
+    const div = document.createElement('div'); div.className = 'rc-alt-item fade-in d' + (i + 3);
+    div.innerHTML = '<span class="rc-alt-icon">' + at.icon + '</span><span class="rc-alt-name">' + at.name + '</span><div class="rc-alt-bar"><div class="rc-alt-bar-fill" id="ab-' + i + '"></div></div><span class="rc-alt-pct">' + pct + '%</span>';
+    altEl.appendChild(div);
+    setTimeout(() => { document.getElementById('ab-' + i).style.width = pct + '%'; }, 600 + i * 200);
+  });
+}
+
+function saveImage() {
+  const card = document.getElementById('result-card');
+  html2canvas(card, { backgroundColor: '#FFFCF8', scale: 2, useCORS: true, logging: false }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = document.getElementById('rc-type').textContent + '_头号玩家测试.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(() => { alert('保存失败，请长按截图保存'); });
+}
+
+function copyShare() {
+  const typeName = document.getElementById('rc-type').textContent;
+  const typeKey = Object.keys(playerTypes).find(k => playerTypes[k].name === typeName);
+  const type = playerTypes[typeKey];
+  const text = type.name + '｜' + type.slogan + '\n\n5.05-5.08 上海国际自行车展\n#森瑞梦头号创作玩家 @SUNRIMOON森瑞梦';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelectorAll('.btn-action')[1]; btn.textContent = '已复制'; setTimeout(() => { btn.textContent = '复制文案'; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    const btn = document.querySelectorAll('.btn-action')[1]; btn.textContent = '已复制'; setTimeout(() => { btn.textContent = '复制文案'; }, 2000);
+  });
+}
+
+function retryQuiz() { showPage('page-start'); }
+</script>
+
+</body>
+</html>
