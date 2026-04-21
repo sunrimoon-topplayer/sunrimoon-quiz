@@ -254,11 +254,11 @@
         <div class="rc-rarity fade-in d3" id="rc-rarity"></div>
         <div class="rc-divider fade-in d3">其他可能</div>
         <div id="rc-alt-list"></div>
-        <div class="rc-qr-section fade-in d5">
+        <div class="rc-qr-section fade-in d5" style="display:none;">
           <div class="rc-qr-box"><img src="qrcode.png" alt="扫码测试"></div>
           <div><div class="rc-qr-title">扫码测试</div><div class="rc-qr-sub">你是哪种头号玩家？</div></div>
         </div>
-        <div class="rc-footer fade-in d6">#森瑞梦头号创作玩家 @SUNRIMOON森瑞梦</div>
+        <div class="rc-footer fade-in d6" style="display:none;">#森瑞梦头号创作玩家 @SUNRIMOON森瑞梦</div>
       </div>
     </div>
     <div class="action-btns fade-in d5">
@@ -531,6 +531,11 @@ function showResult(sorted) {
 
 function saveImage() {
   const card = document.getElementById('result-card');
+  // 保存图片时临时显示二维码和标语
+  const qrSection = card.querySelector('.rc-qr-section');
+  const footer = card.querySelector('.rc-footer');
+  if (qrSection) qrSection.style.display = 'flex';
+  if (footer) footer.style.display = 'block';
   // 暂时移除动画类，确保所有元素可见
   card.querySelectorAll('.fade-in, .bounce-in').forEach(el => {
     el.style.animation = 'none';
@@ -546,14 +551,20 @@ function saveImage() {
       width: card.scrollWidth,
       height: card.scrollHeight,
       onclone: function(doc) {
-        // 在克隆的文档中也移除动画
         doc.querySelectorAll('.fade-in, .bounce-in').forEach(el => {
           el.style.animation = 'none';
           el.style.opacity = '1';
           el.style.transform = 'none';
         });
+        const clonedQr = doc.querySelector('.rc-qr-section');
+        const clonedFooter = doc.querySelector('.rc-footer');
+        if (clonedQr) clonedQr.style.display = 'flex';
+        if (clonedFooter) clonedFooter.style.display = 'block';
       }
     }).then(canvas => {
+      // 保存完后隐藏二维码和标语
+      if (qrSection) qrSection.style.display = 'none';
+      if (footer) footer.style.display = 'none';
       const link = document.createElement('a');
       link.download = document.getElementById('rc-type').textContent + '_头号玩家测试.png';
       link.href = canvas.toDataURL('image/png');
