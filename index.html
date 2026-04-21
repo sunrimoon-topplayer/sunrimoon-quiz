@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>头号玩家测试 | SUNRIMOON森瑞梦</title>
+<meta property="og:title" content="测测你是哪种头号玩家？| SUNRIMOON">
+<meta property="og:description" content="骑上公路车，你是哪种头号玩家？5.05-5.08 上海国际自行车展">
+<meta property="og:image" content="https://qq1090890382-oss.github.io/sunrimoon-quiz/og-image.png">
+
+<title>测测你是哪种头号玩家？| SUNRIMOON</title>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -254,7 +258,7 @@
         <div class="rc-divider fade-in d3">其他可能</div>
         <div id="rc-alt-list"></div>
         <div class="rc-qr-section fade-in d5">
-          <div class="rc-qr-box"><div class="rc-qr-placeholder">二维码<br>占位</div></div>
+          <div class="rc-qr-box"><div class="rc-qr-placeholder">二维��<br>占位</div></div>
           <div><div class="rc-qr-title">扫码测试</div><div class="rc-qr-sub">你是哪种头号玩家？</div></div>
         </div>
         <div class="rc-footer fade-in d6">#森瑞梦头号创作玩家 @SUNRIMOON森瑞梦</div>
@@ -275,21 +279,21 @@ const playerTypes = {
   sprinter:  { name: '头号冲刺玩家', icon: '⚡', img: 'sprinter', rarity: 5.0, slogan: '终点前200米才是比赛开始', desc: '你是一个永远留着力度来说最后一击的人。前半程越佛系，最后200米越疯狂。别人在享受风景的时候，你在蓄力，等到终点线前的那个瞬间——全力释放。', share: '我是头号冲刺玩家！终点前200米才是比赛开始 ⚡' },
   outfit:    { name: '头号穿搭玩家', icon: '👔', img: 'social', rarity: 4.8, slogan: '出发就是骑行路上最靓的崽', desc: '你是一个把骑行当成T台的人。配色协调比功率数字更让你上头，出门前调穿搭的仪式感谁也别想省。骑得快不快不重要，但一定要好看。', share: '我是头号穿搭玩家！出发就是骑行路上最靓的崽 ✨' },
   lowcarbon: { name: '头号低碳玩家', icon: '🌿', img: 'chill', rarity: 4.5, slogan: '两个轮子能解决的事，何必四个轮子', desc: '你是那个把骑行融入日常的人。通勤买菜约饭，能骑车绝不坐车。不是因为多环保，就是觉得两个轮子的自由，四个轮子永远给不了。', share: '我是头号低碳玩家！两个轮子能解决的事，何必四个轮子 🌿' },
-  mod:       { name: '头号改装玩家', icon: '🔧', img: 'sprinter', rarity: 4.8, slogan: '颜值与功率都是极致', desc: '原厂只是起点，每一颗螺丝都得自己说了算。你享受折腾的过程，从把带到牙盘，每一处改装都是对极致的追求。车不是骑的，是养的。', share: '我是头号改装玩家！颜值与功率都是极致 🔧' },
+  mod:       { name: '头号改装玩家', icon: '🔧', img: 'sprinter', rarity: 4.8, slogan: '颜值与功率都是极致', desc: '原厂只是起点，每一颗螺丝都得自己说了算。你享受折腾的过程，从把带到牙盘，每一处改装都是对极致的追求。车不是骑的，是养的。', share: '我是头号改装玩家！颜值与功率都是极致 ����' },
   photo:     { name: '头号打卡玩家', icon: '📸', img: 'chill', rarity: 4.8, slogan: '骑到哪拍到哪，出片比出发更重要', desc: '你是一个骑行界的摄影师。骑5分钟可能就要停下来拍10分钟，光线不对不走，角度不好不骑。朋友圈和相册才是你的真实赛道。', share: '我是头号打卡玩家！骑到哪拍到哪，出片比出发更重要 📸' },
   night:     { name: '头号夜骑玩家', icon: '🌙', img: 'solo', rarity: 3.9, slogan: '路灯尾灯风声，夜晚才是我的主场', desc: '白天太喧嚣，夜晚才是属于你的骑行时刻。路灯、尾灯、风声组成你的BGM，整条路都是你的专场。别人怕黑，你怕天亮。', share: '我是头号夜骑玩家！路灯尾灯风声，夜晚才是我的主场 🌙' },
   social:    { name: '头号社牛玩家', icon: '🤝', img: 'social', rarity: 4.5, slogan: '团骑不认识也能聊一路', desc: '你是那个到哪都能交到朋友的人。团骑不认识？聊两公里就是兄弟。你的骑行不缺速度和风景，但最不缺的是搭子。', share: '我是头号社牛玩家！团骑不认识也能聊一路 🤝' },
-  solo:      { name: '头号独行玩家', icon: '🎧', img: 'solo', rarity: 4.5, slogan: '耳机一戴，路线自己说了算', desc: '你享受一个人的骑行，耳机一戴，世界就是自己的。不用等谁，不用迁就配速，想快就快，想停就停。自由就是最好的骑行搭子。', share: '我是头号独行玩家！耳机一戴，路线自己说了算 🎧' },
+  solo:      { name: '头号独行玩家', icon: '🎧', img: 'solo', rarity: 4.5, slogan: '耳机一戴，路线自己说了算', desc: '你享受一个人的骑行，耳机一戴，世界就���自己的。不用等谁，不用迁就配速，想快就快，想停就停。自由就是最好的骑行搭子。', share: '我是头号独行玩家！耳机一戴，路线自己说了算 🎧' },
   grinder:   { name: '头号卷王玩家', icon: '🔥', img: 'sprinter', rarity: 5.7, slogan: '没PB这趟白骑，Strava永远在刷', desc: '你骑车从来不是随便骑骑，数据就是你的多巴胺。刷新纪录的那一刻，比任何风景都让人兴奋。码表上的每个数据都是你的战场。', share: '我是头号卷王玩家！没PB这趟白骑，Strava永远在刷 🔥' },
   chill:     { name: '头号佛系玩家', icon: '🧘', img: 'chill', rarity: 5.0, slogan: '不卷配速不卷距离，骑到哪算哪', desc: '你骑车的意义就是骑车本身。不看码表，不追配速，骑到哪算哪，路上遇到什么都是惊喜。你深信骑行的终极奥义——开心就好。', share: '我是头号佛系玩家！不卷配速不卷距离，骑到哪算哪 🧘' },
-  windbreak: { name: '头号破风玩家', icon: '💨', img: 'sprinter', rarity: 5.3, slogan: '永远领骑，永远热泪盈眶（被风吹的）', desc: '你是那个永远冲在最前面的人。风你来扛，路你来带，后面的人只管跟。你以为这是责任？不，你就是享受那种被风拍脸的快感。', share: '我是头号破风玩家！永远领骑，永远热泪盈眶（被风吹的）💨' },
+  windbreak: { name: '头号破风玩家', icon: '💨', img: 'sprinter', rarity: 5.3, slogan: '永远领骑，永远热泪盈眶（被风吹的）', desc: '你是那个永远冲在最前面的人。风你来扛，路你来带，后面的人只管跟。你以为这是责任？不，你就是享受那种被风拍脸的快感。', share: '我是头号破风玩家！��远领骑，永远热泪盈眶（被风吹的）💨' },
   slacker:   { name: '头号摸鱼玩家', icon: '🐟', img: 'chill', rarity: 4.6, slogan: '团骑摸鱼第一名，拍照也是第一名', desc: '你把团骑当社交局，骑行是顺便的，拍照聊天才是正经事。摸鱼不可耻，快乐永远排在配速前面，你的节奏就是没有节奏。', share: '我是头号摸鱼玩家！团骑摸鱼第一名，拍照也是第一名 🐟' },
   health:    { name: '头号养生玩家', icon: '🍵', img: 'chill', rarity: 5.2, slogan: '心率不超130，骑完还要泡杯茶', desc: '你是那个把骑行当养生的人。心率稳在二区，踏频优雅不慌，骑完还要拉伸泡茶。别人在卷PB，你在卷谁活得更久骑得更远。', share: '我是头号养生玩家！心率不超130，骑完还要泡杯茶 🍵' },
   gear:      { name: '头号装备玩家', icon: '⚙️', img: 'sprinter', rarity: 5.0, slogan: '车架比车贵，轮组永远差一对', desc: '你是那个研究器材比骑车更上头的人。车架比衣柜贵，轮组永远差一对，每一次升级都是信仰。别人问你骑了多少公里，你回答的是花了多少钱。', share: '我是头号装备玩家！车架比车贵，轮组永远差一对 ⚙️' },
   explorer:  { name: '头号探路玩家', icon: '🗺️', img: 'climber', rarity: 4.5, slogan: '没骑过的路就是好路，包括迷路', desc: '你是那个永远在找新路的人。熟悉的路不走，没骑过的路才有意思。迷路不算意外，那是探险的一部分。你的骑行没有终点，只有下一个路口。', share: '我是头号探路玩家！没骑过的路就是好路，包括迷路 🗺️' },
   refuel:    { name: '头号补给玩家', icon: '☕', img: 'chill', rarity: 4.6, slogan: '骑30公里买那杯咖啡，再骑30公里回家', desc: '你骑车的目的地永远是某家店。骑30公里买杯咖啡，再骑30公里回家。补给不是手段，补给就是目的。你骑的不是路，是美食地图。', share: '我是头号补给玩家！骑30公里买那杯咖啡，再骑30公里回家 ☕' },
   tan:       { name: '头号美黑玩家', icon: '☀️', img: 'climber', rarity: 4.3, slogan: '你夏天每天都穿长袜不热吗？', desc: '晒痕就是你的勋章，长袜线就是你的战痕。夏天越晒越兴奋，肤色深一度就是段位升一级。别人防晒你晒背，你骑的不是车，是日光浴。', share: '我是头号美黑玩家！你夏天每天都穿长袜不热吗？☀️' },
-  rain:      { name: '头号雨神玩家', icon: '🌧️', img: 'solo', rarity: 4.3, slogan: '一出门就下雨，一回家就天晴', desc: '你有一种独特的体质——出门必下雨，回家必天晴。你已经放弃了看天气预报，因为老天爷的天气预报里没有你的名字。雨衣是你的永久装备。', share: '我是头号雨神玩家！一出门就下雨，一回家就天晴 🌧️' },
+  rain:      { name: '头号雨神玩家', icon: '🌧️', img: 'solo', rarity: 4.3, slogan: '一出门就下雨，一回家就天晴', desc: '你有一种独特的体质——出门必下雨，回家���天晴。你已经放弃了看天气预报，因为老天爷的天气预报里没有你的名字。雨衣是你的永久装备。', share: '我是头号雨神玩家！一出门就下雨，一回家就天晴 🌧️' },
   pace:      { name: '头号配速玩家', icon: '⏱️', img: 'sprinter', rarity: 5.2, slogan: '均速永远只比上次快0.1', desc: '你对0.1有着病态的执着。均速永远要比上次快那么一点点，哪怕只快0.1也是一种胜利。你的码表从不撒谎，但你和自己的较量永远没有尽头。', share: '我是头号配速玩家！均速永远只比上次快0.1 ⏱️' },
   anchor:    { name: '头号压轴玩家', icon: '🎭', img: 'social', rarity: 4.6, slogan: '团骑永远在最后但从来没掉过队的神秘人', desc: '你是那个团骑永远在最后面的人，但奇怪的是你从来没掉过队。不争不抢不领骑，但永远在。你是团骑的定海神针，最后的风景归你独享。', share: '我是头号压轴玩家！团骑永远在最后但从来没掉过队的神秘人 🎭' }
 };
@@ -340,7 +344,7 @@ const questions = [
     { key: 'A', text: '带头领骑组织节奏', scores: { social: 1, compete: 1 } },
     { key: 'B', text: '溜到最后拍照聊天', scores: { social: 1, chill: 1 } },
     { key: 'C', text: '关注数据看谁在刷PR', scores: { data: 1, solo: 1 } },
-    { key: 'D', text: '享受风吹在脸上的感觉', scores: { extreme: 1, perf: 1 } }
+    { key: 'D', text: '��受风吹在脸上的感觉', scores: { extreme: 1, perf: 1 } }
   ]},
   // 判别4: 区分探路(solo+extreme) vs 美黑(extreme+look) vs 雨神(solo+extreme)
   { text: '哪种路线最让你心动？', options: [
